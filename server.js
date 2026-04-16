@@ -9,9 +9,9 @@ const path = require('path');
 //app.use(express.static(path.join(__dirname, '../frontend')));
 app.use(express.static(__dirname));
 app.use(express.json());
-const fs = require('fs');
 
-const fs = require('fs');
+
+
 const path = require('path');
 
 const uploadPath = path.join(__dirname, 'uploads');
