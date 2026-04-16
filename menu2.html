@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>PizzaTopia | Menu2</title>
+<style>
+  /* Reset & base */
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Roboto, sans-serif;
+  }
+  :root {
+    --primary: #e74c3c;
+    --dark: #2c3e50;
+    --light: #f8f9fa;
+    --success: #27ae60;
+  }
+  body {
+    background-color: var(--light);
+    color: var(--dark);
+    line-height: 1.6;
+  }
+
+  /* Navbar */
+  .navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 10%;
+    background: var(--dark);
+    color: white;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  }
+  .logo {
+    font-size: 1.5rem;
+    font-weight: bold;
+    letter-spacing: 1px;
+  }
+  .logo span {
+    color: var(--primary);
+  }
+  .nav-links {
+    display: flex;
+    list-style: none;
+    align-items: center;
+    gap: 1.5rem;
+  }
+  .nav-links li a {
+    color: white;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s ease;
+  }
+  .nav-links li a:hover {
+    color: var(--primary);
+  }
+  #cart-count {
+    background: var(--primary);
+    color: white;
+    font-weight: 700;
+    font-size: 0.8rem;
+    padding: 2px 6px;
+    border-radius: 12px;
+    margin-left: 6px;
+    vertical-align: middle;
+  }
+
+  /* Hero */
+  .hero {
+    height: 300px;
+    background: linear-gradient(
+        rgba(0, 0, 0, 0.6),
+        rgba(0, 0, 0, 0.6)
+      ),
+      url('https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=1200&q=80');
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: white;
+    padding: 0 15px;
+  }
+  .hero h1 {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+    font-weight: 700;
+    letter-spacing: 1.2px;
+  }
+  .hero p {
+    font-size: 1.2rem;
+    font-weight: 500;
+  }
+
+  /* Container */
+  .container {
+    max-width: 800px;
+    margin: 50px auto;
+    padding: 0 20px;
+  }
+
+  /* Section Titles */
+  .section-title {
+    font-size: 1.8rem;
+    margin: 30px 0 15px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  /* Menu Items */
+  .menu-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #fff;
+    padding: 15px 20px;
+    margin: 10px 0;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.3s ease;
+    font-weight: 600;
+    font-size: 1rem;
+  }
+  .menu-item:hover {
+    box-shadow: 0 6px 20px rgba(231, 76, 60, 0.25);
+  }
+  .menu-item span:first-child {
+    flex: 1;
+    text-transform: uppercase;
+    color: #333;
+  }
+  .menu-item .price {
+    color: var(--primary);
+    font-weight: 700;
+    font-size: 1.1rem;
+    min-width: 70px;
+    text-align: right;
+    margin: 0 15px;
+    white-space: nowrap;
+  }
+  .menu-item button.add-btn {
+    background-color: var(--primary);
+    color: #fff;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    user-select: none;
+  }
+  .menu-item button.add-btn:hover {
+    background-color: #c0392b;
+  }
+  .menu-item button.add-btn:focus {
+    outline: 2px solid #e74c3c;
+    outline-offset: 2px;
+  }
+
+  /* Button */
+  .btn-add {
+    width: 100%;
+    background: var(--primary);
+    color: white;
+    border: none;
+    padding: 12px;
+    margin-top: 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: 0.3s;
+  }
+  .btn-add:hover {
+    background: #c0392b;
+  }
+
+  /* Modal */
+  .modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+  }
+  .modal-content {
+    background: white;
+    width: 340px; /* good for 80mm roll */
+    max-width: 90%;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    font-family: 'Courier New', monospace;
+    font-size: 12px;
+  }
+  .receipt {
+    margin: 0;
+    white-space: pre-wrap;
+  }
+  .actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+  }
+  .btn-print {
+    flex: 2;
+    background: #27ae60;
+    color: white;
+    border: none;
+    padding: 6px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+  }
+  .btn-close {
+    flex: 1;
+    background: #999;
+    color: white;
+    border: none;
+    padding: 6px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+  }
+
+  /* Thermal printer */
+  @media print {
+    body * {
+      visibility: hidden;
+    }
+    #billModal,
+    #billModal * {
+      visibility: visible;
+    }
+    #billModal {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background: white;
+      display: flex;
+      justify-content: center;
+      padding: 0;
+    }
+    .modal-content {
+      width: 300px;
+      max-width: none;
+      border-radius: 0;
+      box-shadow: none;
+      padding: 5px;
+      font-size: 11px;
+    }
+    .btn-print,
+    .btn-close {
+      display: none;
+    }
+  }
+
+  /* Responsive for mobile devices */
+  @media (max-width: 600px) {
+    .navbar {
+      padding: 1rem 5%;
+      font-size: 0.9rem;
+    }
+    .menu-item {
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 12px 15px;
+    }
+    .menu-item .price {
+      margin: 8px 0 10px;
+      min-width: auto;
+      text-align: left;
+      font-size: 1rem;
+    }
+    .menu-item button.add-btn {
+      width: 100%;
+      justify-content: center;
+      font-size: 1rem;
+      padding: 10px 0;
+    }
+    .hero h1 {
+      font-size: 2rem;
+    }
+    .hero p {
+      font-size: 1rem;
+    }
+  }
+  .btn-clear {
+  width: 100%;
+  background: #999;
+  color: white;
+  border: none;
+  padding: 12px;
+  margin-top: 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+.btn-clear:hover {
+  background: #666;
+}
+.search-container {
+  margin: 20px 0;
+  text-align: center;
+}
+
+#searchInput {
+  width: 100%;
+  max-width: 400px;
+  padding: 10px 15px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+  transition: 0.3s;
+}
+
+#searchInput:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 5px rgba(231, 76, 60, 0.5);
+  outline: none;
+}
+</style>
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar">
+  <div class="logo">PIZZA<span>TOPIA</span></div>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="javascript:void(0)" class="cart-btn" onclick="showBill()">CART 🛒<span id="cart-count">0</span></a></li>
+  </ul>
+</nav>
+
+<!-- Hero -->
+<header class="hero">
+  <h1>Deliciously Fresh</h1>
+  <p>Pick your favorites from our sectioned menu 🍕</p>
+</header>
+
+<!-- Sectioned Menu -->
+<div class="container" id="menu2Section">
+    <div class="search-container">
+  <input type="text" id="searchInput" placeholder="Search for pizza, burger, drink..." onkeyup="searchMenu()">
+  
+</div>
+    <button class="btn-clear" onclick="clearCart()">Clear Cart 🗑️</button>
+
+  <h2 class="section-title">🍕 Pizzas</h2>
+  <div id="pizzaList"></div>
+
+  <h2 class="section-title">🥪 Sandwiches</h2>
+  <div id="sandwichList"></div>
+
+  <h2 class="section-title">🍝 Pasta</h2>
+  <div id="pastaList"></div>
+  
+  <h2 class="section-title">🍟 Fries</h2>
+  <div id="friesList"></div>
+
+  <h2 class="section-title">🍔 Burgers</h2>
+  <div id="burgerList"></div>
+
+  <h2 class="section-title">🍿 Snacks</h2>
+  <div id="snacksList"></div>
+
+  <h2 class="section-title">🥤 Drinks</h2>
+  <div id="drinkList"></div>
+
+ 
+</div>
+
+<!-- Bill Modal -->
+<div id="billModal" class="modal">
+  <div class="modal-content">
+    <pre class="receipt">
+🍕 PIZZA TOPIA
+------------------------------
+Date: <span id="billDate"></span>
+Bill No: <span id="billNo"></span>
+
+<span id="custDisplay"></span>
+------------------------------
+<span id="billItems"></span>
+------------------------------
+TOTAL: <span id="billTotal">₹0.00</span>
+------------------------------
+Thank you for your order! 🙏
+    </pre>
+    <div class="actions">
+      <button class="btn-print" onclick="printBill()">Print 🖨️</button>
+      <button class="btn-close" onclick="closeModal()">Close ❌</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Persistent cart in localStorage
+  let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+  // Update cart count in navbar
+  function updateCartCount() {
+    document.getElementById('cart-count').innerText = cart.length;
+  }
+
+  // Load Menu2 items dynamically
+  function loadMenu2() {
+    fetch("http://localhost:3000/menu2")
+      .then(res => res.json())
+      .then(data => {
+        const sections = {
+          pizza: document.getElementById("pizzaList"),
+          sandwich: document.getElementById("sandwichList"),
+          pasta: document.getElementById("pastaList"),
+          fries: document.getElementById("friesList"),
+          burger: document.getElementById("burgerList"),
+          snacks: document.getElementById("snacksList"),
+          drink: document.getElementById("drinkList")
+        };
+        // Clear previous items
+        for (const key in sections) sections[key].innerHTML = "";
+
+        // Add items to correct section
+        data.forEach(item => {
+          const html = `
+            <div class="menu-item">
+              <span>${item.name}</span>
+              <span class="price">₹${item.price}</span>
+              <button class="add-btn" onclick="addToCart('${item.name}', ${item.price})">Add 🛒</button>
+            
+            </div>
+          `;
+          if (sections[item.type]) sections[item.type].innerHTML += html;
+        });
+      })
+      .catch(err => console.error("Error loading Menu2:", err));
+  }
+
+  // Add selected items to cart (for checkboxes — not used currently)
+  function addSelectedToCart() {
+    alert("Select individual items using Add buttons.");
+  }
+
+  // Show bill modal
+  function showBill() {
+    if (cart.length === 0) {
+      alert("Your cart is empty!");
+      return;
+    }
+    const billDate = document.getElementById('billDate');
+    const custDisplay = document.getElementById('custDisplay');
+    const billItems = document.getElementById('billItems');
+    const billTotal = document.getElementById('billTotal');
+
+    // Date
+    const now = new Date();
+    billDate.innerText = now.toLocaleString();
+
+    // Customer info
+    const name = "Guest";
+    const phone = "N/A";
+    custDisplay.innerHTML = `Customer: ${name}\nPhone: ${phone}`;
+
+    // Build items summary
+    let total = 0;
+    const summary = {};
+    cart.forEach(item => {
+      if (summary[item.name]) summary[item.name].qty += 1;
+      else summary[item.name] = { price: item.price, qty: 1 };
+      total += item.price;
+    });
+
+    let itemsText = "";
+    for (const key in summary) {
+      const item = summary[key];
+      const line = `${item.qty}x ${key}`.padEnd(25, ' ') + `₹${(item.price * item.qty).toFixed(2)}`;
+      itemsText += line + "\n";
+    }
+    billItems.innerText = itemsText;
+    billTotal.innerText = `₹${total.toFixed(2)}`;
+    document.getElementById('billModal').style.display = 'flex';
+  }
+
+  /*function printBill() {
+    const totalVal = document.getElementById('billTotal').innerText;
+    const name = "Guest";
+
+    // Save to sales
+    const sales = JSON.parse(localStorage.getItem('pizza_sales') || "[]");
+    sales.push({
+      time: new Date().toLocaleString(),
+      customer: name,
+      items: cart.map(i => i.name).join(", "),
+      total: parseFloat(totalVal.replace('$', ''))
+    });
+    localStorage.setItem('pizza_sales', JSON.stringify(sales));
+
+    window.print();
+
+    // Reset cart
+    setTimeout(() => {
+      cart = [];
+      localStorage.setItem("cart", JSON.stringify(cart));
+      updateCartCount();
+      closeModal();
+    }, 500);
+  }
+*/
+
+async function printBill() {
+    const nameInput = document.getElementById('custName');
+    const phoneInput = document.getElementById('custPhone');
+
+    const name = nameInput ? nameInput.value : "Guest";
+    const phone = phoneInput ? phoneInput.value : "N/A";
+
+    const totalVal = document.getElementById('billTotal').innerText;
+
+    document.getElementById('custDisplay').innerHTML = 
+        `Customer: ${name}\nPhone: ${phone}`;
+
+
+   const order = {
+        time: new Date().toLocaleString(),
+        customer: name,
+        phone: phone,
+        items: cart.map(i => i.name).join(", "),
+        total: parseFloat(totalVal.replace('₹',''))
+    };
+
+    try {
+        // ✅ SEND TO BACKEND
+       const res = await fetch("http://localhost:3000/sales", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(order)
+});
+
+      const data = await res.json();
+
+        console.log("Bill Response:", data);
+
+        // ✅ SET BILL NUMBER
+        document.getElementById('billNo').innerText = data.billNo;
+
+        // ✅ PRINT AFTER DOM UPDATE
+        setTimeout(() => {
+            window.print();
+        }, 200);
+
+        // ✅ RESET
+        setTimeout(() => {
+            cart = [];
+            localStorage.setItem("cart", JSON.stringify(cart));
+            updateCartCount();
+        }, 800);
+
+    } catch (err) {
+        console.error("Error:", err);
+        alert("Backend not running ❌");
+    }
+}
+  function addToCart(name, price) {
+    cart.push({ name, price });
+    localStorage.setItem("cart", JSON.stringify(cart));
+    const btn = event.target;
+    btn.innerText = "✔ Added";
+    btn.style.background = "#27ae60";
+
+    setTimeout(() => {
+        btn.innerText = "Add to Cart";
+    }, 1000);
+    updateCartCount();
+   // alert(`${name} added to cart 🛒`);
+  }
+
+  function closeModal() {
+    document.getElementById('billModal').style.display = 'none';
+  }
+
+  // Initialize
+  window.onload = () => {
+    loadMenu2();
+    updateCartCount();
+  };
+  function clearCart() {
+  if (cart.length === 0) {
+    alert("Cart is already empty.");
+    return;
+  }
+  if (confirm("Are you sure you want to clear your cart?")) {
+    cart = [];
+    localStorage.setItem("cart", JSON.stringify(cart));
+    updateCartCount();
+    alert("Cart cleared.");
+  }
+}
+function searchMenu() {
+  const query = document.getElementById("searchInput").value.toLowerCase();
+  const allItems = document.querySelectorAll(".menu-item");
+
+  allItems.forEach(item => {
+    const name = item.querySelector("span")?.innerText.toLowerCase() || "";
+    if(name.includes(query)) {
+      item.style.display = "flex"; // show
+    } else {
+      item.style.display = "none"; // hide
+    }
+  });
+}
+function checkPassword() {
+    const password = prompt("Enter Admin Password to view reports:");
+    
+    // You can change 'admin123' to whatever password you want
+    if (password === "admin123") {
+        window.location.href = "reports.html";
+    } else {
+        alert("Incorrect password. Access denied.");
+    }
+}
+</script>
+
+</body>
+</html>

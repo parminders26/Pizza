@@ -1,0 +1,23 @@
+[
+  {
+    "billNo": 11,
+    "time": "4/8/2026, 10:39:34 PM",
+    "customer": "Guest",
+    "items": "PANEER MAKHANI PIZZA, PANEER MAKHANI PIZZA",
+    "total": 858
+  },
+  {
+    "billNo": 1,
+    "time": "4/12/2026, 10:59:35 PM",
+    "customer": "Guest",
+    "items": "CHEESE FINGER",
+    "total": 200
+  },
+  {
+    "billNo": 1,
+    "time": "4/15/2026, 3:37:17 AM",
+    "customer": "Guest",
+    "items": "CAPSICUM PIZZA, ONION PIZZA",
+    "total": 198
+  }
+]

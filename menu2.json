@@ -1,0 +1,158 @@
+[
+  {
+    "id": 1774504244799,
+    "name": "CAPSICUM PIZZA",
+    "price": 99,
+    "type": "pizza"
+  },
+  {
+    "id": 1774504271757,
+    "name": "ONION PIZZA",
+    "price": 99,
+    "type": "pizza"
+  },
+  {
+    "id": 1774504285806,
+    "name": "CORN PIZZA",
+    "price": 99,
+    "type": "pizza"
+  },
+  {
+    "id": 1774504319463,
+    "name": "DOUBLE CHEESE PIZZA",
+    "price": 139,
+    "type": "pizza"
+  },
+  {
+    "id": 1774504510026,
+    "name": "CAPSICUM PIZZA (M)",
+    "price": 199,
+    "type": "pizza"
+  },
+  {
+    "id": 1774504532452,
+    "name": "ONION PIZZA (M)",
+    "price": 199,
+    "type": "pizza"
+  },
+  {
+    "id": 1774504567946,
+    "name": "CORN PIZZA (M)",
+    "price": 199,
+    "type": "pizza"
+  },
+  {
+    "id": 1774504624857,
+    "name": "DOUBLE CHEESE PIZZA (M)",
+    "price": 239,
+    "type": "pizza"
+  },
+  {
+    "id": 1774504745065,
+    "name": "VEG SANDWICH",
+    "price": 80,
+    "type": "sandwich"
+  },
+  {
+    "id": 1774504778083,
+    "name": "CHEESE CORN SANDWICH",
+    "price": 90,
+    "type": "sandwich"
+  },
+  {
+    "id": 1774504819984,
+    "name": "MUSHROOM SANDWICH",
+    "price": 100,
+    "type": "sandwich"
+  },
+  {
+    "id": 1774504862976,
+    "name": "PANEER MAKHANI SANDWICH",
+    "price": 100,
+    "type": "sandwich"
+  },
+  {
+    "id": 1774504937986,
+    "name": "WHITE SAUCE PASTA",
+    "price": 100,
+    "type": "pasta"
+  },
+  {
+    "id": 1774504964601,
+    "name": "RED SAUCE PASTA",
+    "price": 120,
+    "type": "pasta"
+  },
+  {
+    "id": 1774505033614,
+    "name": "VEG WRAP",
+    "price": 70,
+    "type": "burger"
+  },
+  {
+    "id": 1774505053149,
+    "name": "PANEER WRAP",
+    "price": 90,
+    "type": "burger"
+  },
+  {
+    "id": 1774505113449,
+    "name": "VEG. SPRING ROLL",
+    "price": 60,
+    "type": "snacks"
+  },
+  {
+    "id": 1774505131421,
+    "name": "FRIED MOMOS",
+    "price": 60,
+    "type": "snacks"
+  },
+  {
+    "id": 1774505145525,
+    "name": "SWEET CORN",
+    "price": 60,
+    "type": "snacks"
+  },
+  {
+    "id": 1774505188577,
+    "name": "VEG. NUGGETS (10PCS)",
+    "price": 120,
+    "type": "snacks"
+  },
+  {
+    "id": 1774505209625,
+    "name": "CHEESE FINGER",
+    "price": 200,
+    "type": "snacks"
+  },
+  {
+    "id": 1774505223998,
+    "name": "VEG NOODLE",
+    "price": 70,
+    "type": "snacks"
+  },
+  {
+    "id": 1774505246449,
+    "name": "HAKKA NOODLE",
+    "price": 80,
+    "type": "snacks"
+  },
+  {
+    "id": 1774505267636,
+    "name": "MANCHURIAN",
+    "price": 120,
+    "type": "snacks"
+  },
+  {
+    "id": 1774505282725,
+    "name": "CHEESE CHILLY",
+    "price": 250,
+    "type": "snacks"
+  },
+  {
+    "id": 1775624015085,
+    "name": "drfg",
+    "price": 43335,
+    "type": "fries"
+  }
+]

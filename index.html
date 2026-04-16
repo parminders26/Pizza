@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PizzaTopia | Premium Hand-Tossed Pizza</title>
+<style>
+/* --- CSS STYLES --- */
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Roboto, sans-serif; }
+:root {
+  --primary: #e74c3c;
+  --dark: #2c3e50;
+  --light: #f8f9fa;
+  --success: #27ae60;
+  --secondary: #f1c40f;
+}
+
+body {
+  background-color: var(--light);
+  color: var(--dark);
+  font-family: 'Segoe UI', Roboto, sans-serif;
+  line-height: 1.6;
+}
+
+/* --- Navbar --- */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 10%;
+  background: var(--dark);
+  color: white;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+  transition: 0.3s;
+  
+  position: sticky;
+  top: 0;
+
+}
+.navbar:hover { background: rgba(44, 62, 80, 0.95); }
+.logo { font-size: 1.7rem; font-weight: bold; letter-spacing: 2px; }
+.logo span { color: var(--primary); }
+.nav-links { display: flex; list-style: none; align-items: center; }
+.nav-links li a {
+  color: white;
+  text-decoration: none;
+  margin-left: 2rem;
+  font-weight: 600;
+  padding: 5px 10px;
+  border-radius: 5px;
+  transition: 0.3s;
+}
+.nav-links li a:hover { background: rgba(255,255,255,0.1); }
+.cart-btn {
+  background: var(--primary);
+  padding: 8px 18px;
+  border-radius: 25px;
+  cursor: pointer;
+  font-weight: bold;
+  position: relative;
+  transition: 0.3s;
+}
+.cart-btn:hover { background: #c0392b; }
+
+/* --- Hero Section --- */
+.hero {
+  position: relative;
+  min-height: 70vh;
+  max-height: 90vh;
+  background: linear-gradient(to bottom, rgba(0,0,0,0.6), rgba(0,0,0,0.2)),
+              url('https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=1200&q=80');
+  background-size: cover;
+  background-attachment: fixed; /* parallax */
+  background-position: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  color: white;
+  padding: 2rem;
+  transition: all 0.6s ease;
+  z-index: 1;
+}
+.hero h1 {
+  font-size: 3rem;
+  margin-bottom: 15px;
+  font-weight: bold;
+  text-shadow: 2px 2px 10px rgba(0,0,0,0.7);
+  transition: all 0.6s ease;
+}
+.hero p {
+  font-size: 1.5rem;
+  margin-bottom: 20px;
+  text-shadow: 1px 1px 5px rgba(0,0,0,0.6);
+  transition: all 0.6s ease;
+}
+.hero.scrolled {
+  transform: translateY(-50px);
+  min-height: 45vh;
+  opacity: 0.9;
+}
+.hero.scrolled h1 { font-size: 2.2rem; }
+.hero.scrolled p { font-size: 1.2rem; }
+.menu-btn {
+  padding: 14px 30px;
+  font-size: 1.2rem;
+  background: linear-gradient(45deg, var(--primary), #ff6b6b);
+  color: white;
+  border-radius: 50px;
+  text-decoration: none;
+  font-weight: bold;
+  box-shadow: 0 6px 20px rgba(231,76,60,0.5);
+  transition: all 0.4s;
+}
+.menu-btn:hover {
+  transform: translateY(-5px) scale(1.05);
+  box-shadow: 0 10px 25px rgba(231,76,60,0.6);
+}
+
+/* --- Product Grid --- */
+.container { max-width: 1200px; margin: auto; padding: 2rem 1rem; }
+.section-title { text-align: center; margin-bottom: 40px; font-size: 2.5rem; font-weight: bold; position: relative; }
+.section-title::after {
+  content: "";
+  width: 100px;
+  height: 5px;
+  background: var(--primary);
+  display: block;
+  margin: 10px auto;
+  border-radius: 2px;
+}
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 30px;
+}
+/*.product-card {
+  background: white;
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+  transition: transform 0.4s, box-shadow 0.4s;
+}
+
+/* Fade-in + slide-up effect */
+.product-card {
+    border-radius: 18px;
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 0.6s ease-out;
+}
+
+.product-card.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.product-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 25px rgba(0,0,0,0.2);
+}
+.product-card img {
+  width: 100%;
+  height: 280px;
+  object-fit: cover;
+  transition: 0.4s;
+}
+.product-card:hover img { transform: scale(1.1); }
+.card-body { padding: 20px; }
+.price-tag {
+  color: white;
+  background: var(--primary);
+  display: inline-block;
+  padding: 6px 15px;
+  border-radius: 25px;
+  font-size: 1rem;
+  margin-top: 10px;
+  font-weight: bold;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+}
+.add-btn {
+  width: 100%;
+  background: linear-gradient(45deg, var(--primary), #ff6b6b);
+  color: white;
+  border: none;
+  padding: 12px;
+  margin-top: 15px;
+  border-radius: 30px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: 0.3s;
+}
+.add-btn:hover {
+  background: linear-gradient(45deg, #c0392b, #ff4757);
+  transform: scale(1.05);
+}
+
+/* --- Responsive --- */
+@media (max-width: 1024px) { .hero h1 { font-size: 2.5rem; } .hero p { font-size: 1.3rem; } }
+@media (max-width: 768px) { .navbar { flex-direction: column; padding: 1rem 5%; } .nav-links { flex-direction: column; align-items: center; } .nav-links li a { margin: 8px 0; } .hero h1 { font-size: 2rem; } .hero p { font-size: 1rem; } }
+@media (max-width: 500px) { .hero h1 { font-size: 1.5rem; } .hero p { font-size: 0.9rem; } .menu-btn { width: 100%; text-align: center; } .product-card img { height: 220px; } }
+/* Bill Modal */
+.modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 2000; overflow-y: auto; }
+.modal-content { background: white; width: 90%; max-width: 400px; margin: 50px auto; padding: 30px; border-radius: 8px; position: relative; }
+#receipt { border: 1px dashed #ccc; padding: 20px; margin-top: 10px; }
+.receipt-header { text-align: center; margin-bottom: 20px; }
+.bill-item { display: flex; justify-content: space-between; margin-bottom: 10px; }
+.total-line { border-top: 2px solid #333; margin-top: 15px; padding-top: 10px; font-weight: bold; display: flex; justify-content: space-between; }
+.form-group { margin-bottom: 15px; }
+.form-group input { width: 100%; padding: 8px; margin-top: 5px; border: 1px solid #ddd; }
+.actions { margin-top: 20px; display: flex; gap: 10px; }
+.btn-print { flex: 2; background: var(--success); color: white; border: none; padding: 12px; border-radius: 5px; cursor: pointer; }
+.btn-close { flex: 1; background: #999; color: white; border: none; padding: 12px; border-radius: 5px; cursor: pointer; }
+
+.menu-btn {
+  margin-top: 20px;
+  display: inline-block;
+  padding: 12px 25px;
+  background: #e74c3c;
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+  border-radius: 30px;
+  transition: 0.3s;
+  box-shadow: 0 5px 15px rgba(231, 76, 60, 0.4);
+}
+
+.menu-btn:hover {
+  background: #c0392b;
+  transform: scale(1.05);
+}
+
+
+.menu-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #fff;
+  padding: 12px 15px;
+  margin: 8px 0;
+  border-radius: 8px;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+}
+
+.menu-item label {
+  cursor: pointer;
+}
+
+.price {
+  color: #e74c3c;
+  font-weight: bold;
+}
+
+@media print { body * { visibility: hidden; } #receipt, #receipt * { visibility: visible; } #receipt { position: absolute; top: 0; left: 0; width: 100%; border: none; } .btn-print, .btn-close, .form-group, h3 { display: none; } }
+@media (max-width: 600px) { .navbar { padding: 1rem 5%; } .nav-links li a { margin-left: 10px; font-size: 0.9rem; } }
+
+@media (max-width: 900px) {
+  .product-grid {
+    grid-template-columns: repeat(2, 1fr); /* 2 per row on tablet */
+  }
+}
+
+@media (max-width: 500px) {
+  .product-grid {
+    grid-template-columns: 1fr; /* 1 per row on mobile */
+  }
+}
+.footer {
+  background: linear-gradient(
+    to bottom,
+    #1a252f 0%,   /* exact navbar color */
+    #243342 60%,  /* slightly darker */
+    #1a252f 100%  /* deep dark */
+  );
+  color: #fff;
+  padding: 30px 10px;
+  margin-top: 40px;
+  border-top: 1px solid rgba(255,255,255,0.05);
+}
+
+/* Remove shadow (this was causing visual difference) */
+.footer {
+  box-shadow: 0 -5px 20px rgba(0,0,0,0.3);
+}
+/* SAME hover effect as navbar */
+.footer:hover {
+  background: rgba(44, 62, 80, 0.95);
+}
+.footer-section {
+  opacity: 0.9;
+}
+
+.footer:hover .footer-section {
+  opacity: 1;
+}
+
+.footer-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 20px;
+}
+
+.footer-section h3,
+.footer-section h4 {
+  margin-bottom: 10px;
+  color: #ff9800;
+}
+
+.footer-section p {
+  margin: 5px 0;
+  font-size: 14px;
+}
+
+.footer-bottom {
+  text-align: center;
+  margin-top: 20px;
+  border-top: 1px solid #444;
+  padding-top: 10px;
+  font-size: 13px;
+}
+.footer a {
+  color: #ff9800;
+  text-decoration: none;
+}
+.call-btn {
+  display: inline-block;
+  background: #28a745;
+  color: white;
+  padding: 10px 15px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-size: 16px;
+  margin-top: 10px;
+}
+
+.call-btn:hover {
+  background: #218838;
+}
+
+#progressBar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 4px;
+  width: 0%;
+  background: linear-gradient(90deg, #e74c3c, #ff6b6b);
+}
+</style>
+</head>
+<body>
+
+<nav class="navbar">
+    <div class="logo">PIZZA<span>TOPIA</span></div>
+    <ul class="nav-links">
+        <li><a href="#">HOME</a></li>
+        <li><a href="javascript:void(0)" class="cart-btn" onclick="showBill()">CART 🛒 <span id="cart-count">0</span></a></li>
+        <li><a href="admin.html">Admin</a></li>
+    </ul>
+     <div id="progressBar"></div>
+</nav>
+
+<header class="hero">
+    <h1>Deliciously Fresh</h1>
+    <p>Order your favorite pizza in seconds.</p>
+      <a href="menu2.html" class="menu-btn">View Menu 🍕</a>
+</header>
+
+<div class="container">
+    <div class="container" id="menuSection"></div>
+
+    <h2 class="section-title">Select Your Pizza</h2>
+    
+    <div class="product-grid" id="productGrid">
+        <!-- Menu items will load here dynamically -->
+    </div>
+   
+    <div class="product-grid" id="sideGrid"></div>
+</div>
+
+
+
+<!-- Bill Modal -->
+<div id="billModal" class="modal">
+    <div class="modal-content">
+        <h3>Complete Your Order</h3>
+        <div class="form-group">
+            <input type="text" id="custName" placeholder="Customer Name">
+            <input type="text" id="custPhone" placeholder="Phone Number">
+        </div>
+
+        <div id="receipt">
+            <div class="receipt-header">
+                <h2>PizzaTopia</h2>
+                <p id="billNo"></p>
+                <p id="billDate"></p>
+                
+            </div>
+            <div id="custDisplay"></div>
+            <hr style="margin: 10px 0; border: 1px dashed #eee;">
+            <div id="billItems"></div>
+            <div class="total-line">
+                <span>TOTAL</span>
+                <span id="billTotal">₹0.00</span>
+            </div>
+        </div>
+
+        <div class="actions">
+            <button class="btn-print" onclick="printBill()">Print & Finish</button>
+            <button class="btn-close" onclick="closeModal()">Close</button>
+        </div>
+    </div>
+</div>
+
+<footer class="footer">
+  <div class="footer-container">
+
+    <div class="footer-section">
+      <h3>Pizza Cafe</h3>
+      <p>Fresh & Delicious Pizzas 🍕</p>
+    </div>
+
+    <div class="footer-section">
+      <h4>Contact</h4>
+      <p>📞 +91 7528090102</p>
+      <p>📧 pizzatopia2026@gmail.com</p>
+    </div>
+
+    <div class="footer-section">
+      <h4>Address</h4>
+      <p>Main Market Purkhali, Ropar</p>
+      <p>Pu, India</p>
+    </div>
+    
+
+    <div class="footer-section">
+      <h4>Opening Hours</h4>
+      <p>Mon - Sun: 10 AM - 11 PM</p>
+    </div>
+<div class="footer-section">
+  <h4>Our Location</h4>
+
+  <iframe 
+    src="https://www.google.com/maps?q=Atta%20Market%20Noida&output=embed"
+    width="100%" 
+    height="120" 
+    style="border:0; border-radius:10px;"
+    allowfullscreen="" 
+    loading="lazy">
+  </iframe>
+
+  <p>📍 Atta Market, Noida, UP</p>
+</div>
+  </div>
+
+  <div class="footer-bottom">
+    <p>© 2026 Pizza Topia | All Rights Reserved</p>
+  </div>
+
+  <div class="footer-section">
+  <h4>Developer</h4>
+  <p>Parminder Singh (Web Developer)</p>
+  <p>
+    📞 <a href="https://wa.me/919877089793" target="_blank">
+      Chat on WhatsApp (9877089793)
+    </a>
+    
+  </p>
+</div>
+</footer>
+<script>
+// Cart logic
+let cart = [];
+
+// Load menu from localStorage
+function loadMenu() {
+    fetch("http://localhost:3000/menu")
+    .then(res => res.json())
+    .then(menu => {
+        const grid = document.getElementById('productGrid');
+        grid.innerHTML = '';
+
+        menu.forEach(item => {
+            const card = document.createElement('div');
+            card.className = 'product-card';
+
+            card.innerHTML = `
+                <img src="http://localhost:3000/uploads/${item.img}">
+                <div class="card-body">
+                    <h3>${item.name}</h3>
+                    <p>${item.desc}</p>
+                    <p class="price-tag">₹${parseFloat(item.price).toFixed(2)}</p>
+                    <button class="add-btn" onclick="addToCart('${item.name}', ${item.price})">Add to Cart</button>
+                </div>
+            `;
+
+            grid.appendChild(card);
+        });
+            // --- Attach IntersectionObserver AFTER cards are loaded ---
+        const cards = document.querySelectorAll(".product-card");
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if(entry.isIntersecting){
+                    entry.target.classList.add("visible");
+                }
+            });
+        }, { threshold: 0.2 });
+
+        cards.forEach(card => observer.observe(card));
+    
+    })
+    .catch(err => console.error(err));
+}
+
+// Add to cart
+function addToCart(name, price) {
+    cart.push({ name, price });
+    document.getElementById('cart-count').innerText = cart.length;
+
+    const btn = event.target;
+    btn.innerText = "✔ Added";
+    btn.style.background = "#27ae60";
+
+    setTimeout(() => {
+        btn.innerText = "Add to Cart";
+    }, 1000);
+}
+
+// Show bill modal
+function showBill() {
+    if(cart.length === 0){ alert("Your cart is empty!"); return; }
+    const itemsDiv = document.getElementById('billItems');
+    const totalSpan = document.getElementById('billTotal');
+    const dateDiv = document.getElementById('billDate');
+    const billNoEl = document.getElementById('billNo');
+
+    let total = 0;
+    dateDiv.innerText = new Date().toLocaleString();
+    itemsDiv.innerHTML = '';
+    cart.forEach(item => {
+        total += item.price;
+        itemsDiv.innerHTML += `<div class="bill-item"><span>1x ${item.name}</span><span>₹${item.price.toFixed(2)}</span></div>`;
+    });
+    totalSpan.innerText = `₹${total.toFixed(2)}`;
+    document.getElementById('billModal').style.display = 'block';
+}
+
+async function printBill() {
+    const name = document.getElementById('custName').value || "Guest";
+    const phone = document.getElementById('custPhone').value || "N/A";
+    const totalVal = document.getElementById('billTotal').innerText;
+
+    // Show customer in bill
+    document.getElementById('custDisplay').innerHTML = `
+        <p><strong>Customer:</strong> ${name}</p>
+        <p><strong>Phone:</strong> ${phone}</p>
+    `;
+
+    const order = {
+        time: new Date().toLocaleString(),
+        customer: name,
+        phone: phone,
+        items: cart.map(i => i.name).join(", "),
+        total: parseFloat(totalVal.replace('₹','').replace('$',''))
+    };
+
+    try {
+        // ✅ SEND TO BACKEND
+       const res = await fetch("http://localhost:3000/sales", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(order)
+});
+
+const data = await res.json();
+
+        console.log("Bill Response:", data);
+
+        // ✅ SET BILL NUMBER
+        const billEl = document.getElementById('billNo');
+        billEl.innerText = "Bill No: " + data.billNo;
+
+        // 🔥 FORCE DOM UPDATE (VERY IMPORTANT)
+        requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+                window.print();
+            });
+        });
+        // Reset after print
+        setTimeout(() => {
+            cart = [];
+            document.getElementById('cart-count').innerText = "0";
+            document.getElementById('custName').value = "";
+            document.getElementById('custPhone').value = "";
+          
+        }, 800);
+
+    } catch (err) {
+        console.error("Error:", err);
+        alert("Backend not running ❌");
+    }
+}
+// Print and save
+/*function printBill() {
+  
+    const name = document.getElementById('custName').value || "Guest";
+    const phone = document.getElementById('custPhone').value || "N/A";
+    document.getElementById('custDisplay').innerHTML = `<p><strong>Customer:</strong> ${name}</p><p><strong>Phone:</strong> ${phone}</p>`;
+    const totalVal = document.getElementById('billTotal').innerText;
+    const sales = JSON.parse(localStorage.getItem('pizza_sales') || "[]");
+    sales.push({
+        time: new Date().toLocaleString(),
+        customer: name,
+        items: cart.map(i=>i.name).join(", "),
+        total: parseFloat(totalVal.replace('₹',''))
+    });
+    localStorage.setItem('pizza_sales', JSON.stringify(sales));
+    window.print();
+    setTimeout(() => { cart=[]; document.getElementById('cart-count').innerText="0"; document.getElementById('custName').value=""; document.getElementById('custPhone').value=""; closeModal(); }, 500);
+}
+*/
+
+function closeModal(){ document.getElementById('billModal').style.display='none'; }
+
+// Load menu when page loads
+window.onload = loadMenu;
+
+
+
+function addSelectedToCart() {
+    const checked = document.querySelectorAll("input:checked");
+
+    if (checked.length === 0) {
+        alert("Select items first!");
+        return;
+    }
+
+    let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+    checked.forEach(i => {
+        cart.push({
+            name: i.getAttribute("data-name"),
+            price: parseFloat(i.value)
+        });
+    });
+
+    localStorage.setItem("cart", JSON.stringify(cart));
+
+    document.getElementById('cart-count').innerText = cart.length;
+
+    checked.forEach(i => i.checked = false);
+
+    alert("Added to cart 🛒");
+}
+
+window.addEventListener('scroll', () => {
+    const hero = document.querySelector('.hero');
+    const scrollY = window.scrollY;
+
+    if(scrollY > 50) {            // start animation after 50px scroll
+        hero.classList.add('scrolled');
+    } else {
+        hero.classList.remove('scrolled');
+    }
+});
+document.addEventListener("DOMContentLoaded", () => {
+  const cards = document.querySelectorAll(".product-card");
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if(entry.isIntersecting){
+        entry.target.classList.add("visible");
+      }
+    });
+  }, { threshold: 0.2 }); // 20% visible triggers animation
+
+  cards.forEach(card => observer.observe(card));
+});
+
+window.addEventListener("scroll", () => {
+  const scrollTop = document.documentElement.scrollTop;
+  const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+
+  const scrolled = (scrollTop / scrollHeight) * 100;
+
+  document.getElementById("progressBar").style.width = scrolled + "%";
+});
+</script>
+
+
+
+
+</body>
+</html>

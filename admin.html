@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Admin - Pizza Menu</title>
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/body-pix"></script>
+<style>
+body { font-family: Arial; padding: 40px; background: #f4f4f4; margin: 0;   /* 🔥 removes top white space */
+   margin: 0;   /* 🔥 removes top white space */
+  padding: 0;}
+.box { max-width: 400px; margin: auto; background: white; padding: 20px; border-radius: 10px; }
+input { width: 100%; padding: 10px; margin: 8px 0; }
+button { width: 100%; padding: 10px; background: #27ae60; color: white; border: none; cursor: pointer; }
+.btn-custom {
+  background: #e6f10f;
+  color: #2c3e50;
+  padding: 5px 12px;
+  border-radius: 4px;
+  font-weight: bold;
+  border: none;
+  cursor: pointer;
+  transition: 0.3s;
+}
+.btn-custom:hover {
+  background: #d4df0c;
+}
+.tab-btn {
+  display: inline-block;   /* 🔥 important */
+  background: #e6f10f;
+  color: #2c3e50;
+  padding: 6px 16px;
+  border-radius: 6px;
+  font-weight: bold;
+  text-align: center;
+  width: auto;             /* ❌ remove full width */
+  max-width: fit-content;  /* ✅ shrink to content */
+}
+.tab-btn {
+  border-bottom: 3px solid transparent;
+  cursor: pointer;
+  transition: 0.3s;
+  color: #b0bec5;
+  transition: 0.3s;
+}
+
+.tab-btn:hover {
+  background: #0c60df;
+  color: #ffffff;  
+}
+
+
+.tab-btn.active {
+  font-weight: 700;
+  letter-spacing: 0.5px;
+   border-bottom: 3px solid #2c3e50;
+}
+
+.tab-btn::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: -35px;
+  left: 50%;
+  transform: translateX(-50%);
+  
+  background: #333;
+  color: #fff;
+  padding: 5px 10px;
+  border-radius: 4px;
+  font-size: 12px;
+
+  opacity: 0;
+  pointer-events: none;
+  transition: 0.3s;
+  white-space: nowrap;
+}
+
+/* Show tooltip on hover */
+.tab-btn:hover::after {
+  opacity: 1;
+  bottom: -40px;
+}
+
+#list div { background: #fff; margin: 10px 0; padding: 10px; border-radius: 5px; display: flex; align-items: center; justify-content: space-between; }
+#list img { width: 60px; height: 60px; object-fit: cover; border-radius: 5px; margin-right: 10px; }
+.navbar {
+  display: flex;
+  align-items: center;
+  background: #2c3e50;
+  padding: 10px 20px;
+  color: white;
+  min-height: 60px;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  margin-bottom: 20px;
+  padding: 18px 25px 14px 25px;
+  
+}
+
+/* 🔥 THIS FIXES EVERYTHING */
+.logo {
+  flex: 1;   /* takes left space */
+}
+
+/* Tabs stay right but controlled */
+.tabs {
+  display: flex;
+  gap: 25px;
+}
+
+/* Tabs style */
+.tab-btn {
+  background: transparent;
+  border: none;
+
+  
+  cursor: pointer;
+  padding: 6px 10px;
+  position: relative;
+  font-size: 16px;
+  color: #ccc;          /* default light color */
+  font-weight: 600;
+}
+
+/* Active tab underline */
+.tab-btn.active {
+  color: #e6f10f;
+}
+
+
+@media (max-width: 600px) {
+  .tabs {
+    gap: 10px;
+  }
+
+  .tab-btn {
+    font-size: 14px;
+    padding: 6px;
+     position: relative;
+  }
+}
+</style>
+</head>
+<body>
+
+  <div class="navbar">
+  <div class="logo">🍕 Admin Panel</div>
+
+ 
+
+  <div class="tabs">
+    <button class="tab-btn active" onclick="goPage('menu2admin.html', event)">Edit Menu 2
+
+    
+    <script>
+function goPage(page) {
+  window.location.href = page;
+}
+</script>
+</button>
+
+   <button class="tab-btn active" onclick="goPage('reports.html', event)">📊 View Daily Reports
+<script>
+    function goPage(page) {
+  window.location.href = page;
+}
+</script>
+    </button>
+       <button class="tab-btn active" onclick="goPage('index.html', event)"> BACK
+<script>
+    function goPage(page) {
+  window.location.href = page;
+}
+</script>
+    </button>
+  </div>
+</div>
+
+
+
+<div class="box">
+    <h2>Add New Pizza</h2>
+    <input type="text" id="name" placeholder="Item Name">
+    <input type="text" id="desc" placeholder="Description">
+    <input type="number" id="price" placeholder="Price">
+    <input type="file" id="image">
+    <button onclick="saveItem()">Save Item</button>
+</div>
+
+<h2 style="text-align:center; margin-top:30px;">Existing Menu</h2>
+<div id="list"></div>
+
+<script>
+
+function checkPassword() {
+    const password = prompt("Enter Admin Password to view reports:");
+    //window.location.href = "menu2admin.html";
+    // You can change 'admin123' to whatever password you want
+    if (password === "admin123") {
+        window.location.href = "reports.html";
+    } else {
+        alert("Incorrect password. Access denied.");
+    }
+}
+async function removeBG() {
+  const file = document.getElementById("upload").files[0];
+  if (!file) return alert("Upload image first!");
+
+  const img = new Image();
+  img.src = URL.createObjectURL(file);
+
+  img.onload = async () => {
+    const canvas = document.getElementById("canvas");
+    const ctx = canvas.getContext("2d");
+
+    canvas.width = img.width;
+    canvas.height = img.height;
+
+    // Load model
+    const net = await bodyPix.load();
+
+    // Segment person
+    const segmentation = await net.segmentPerson(img);
+
+    // Draw image
+    ctx.drawImage(img, 0, 0);
+
+    // Remove background
+    const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+
+    for (let i = 0; i < imgData.data.length; i += 4) {
+      if (segmentation.data[i / 4] === 0) {
+        imgData.data[i + 3] = 0; // make transparent
+      }
+    }
+
+    ctx.putImageData(imgData, 0, 0);
+  };
+}
+
+
+function downloadImage() {
+  const canvas = document.getElementById("canvas");
+
+  // Convert canvas to image
+  const link = document.createElement("a");
+  link.download = "pizza_no_bg.png"; // file name
+  link.href = canvas.toDataURL("image/png"); // PNG keeps transparency
+  link.click();
+}
+
+function loadItems() {
+    fetch("http://localhost:3000/menu")
+    .then(res => res.json())
+    .then(data => {
+        const list = document.getElementById("list");
+        list.innerHTML = "";
+        data.forEach(item => {
+            const div = document.createElement("div");
+            div.innerHTML = `
+                <div style="display:flex;align-items:center;">
+                    <img src="http://localhost:3000/uploads/${item.img}">
+                    <div>
+                        <strong>${item.name}</strong><br>
+                        ₹${item.price}
+                    </div>
+                </div>
+                <button onclick="delItem(${item.id})" style="background:red;">Delete</button>
+            `;
+            list.appendChild(div);
+        });
+    });
+}
+
+function saveItem() {
+    const name = document.getElementById('name').value;
+    const desc = document.getElementById('desc').value;
+    const price = document.getElementById('price').value;
+    const imageFile = document.getElementById('image').files[0];
+
+    if (!name || !price || !imageFile) {
+        alert("Please fill all fields!");
+        return;
+    }
+
+    const formData = new FormData();
+    formData.append("name", name);
+    formData.append("desc", desc);
+    formData.append("price", price);
+    formData.append("image", imageFile);
+
+    fetch("http://localhost:3000/add", { method: "POST", body: formData })
+    .then(res => res.json())
+    .then(data => {
+        alert("Item added!");
+        document.getElementById('name').value = "";
+        document.getElementById('desc').value = "";
+        document.getElementById('price').value = "";
+        document.getElementById('image').value = "";
+        loadItems();
+    })
+    .catch(err => console.error(err));
+}
+
+function delItem(id) {
+    fetch(`http://localhost:3000/delete/${id}`, { method: "DELETE" })
+    .then(() => loadItems());
+}
+
+window.onload = loadItems;
+
+
+
+function saveItem() {
+    const name = document.getElementById('name').value;
+    const desc = document.getElementById('desc').value;
+    const price = document.getElementById('price').value;
+    const image = document.getElementById('image').files[0];
+
+    if(!name || !price || !image) { alert("Fill all fields!"); return; }
+
+    const formData = new FormData();
+    formData.append('name', name);
+    formData.append('desc', desc);
+    formData.append('price', price);
+    formData.append('image', image);
+
+    fetch("http://localhost:3000/add", { method:"POST", body: formData })
+    .then(res => res.json())
+    .then(() => { alert("Added!"); location.reload(); })
+    .catch(err => console.error(err));
+}
+
+</script>
+
+</body>
+</html>
