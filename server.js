@@ -9,6 +9,12 @@ const path = require('path');
 //app.use(express.static(path.join(__dirname, '../frontend')));
 app.use(express.static(__dirname));
 app.use(express.json());
+const fs = require('fs');
+
+// ✅ Create uploads folder if not exists
+if (!fs.existsSync('uploads')) {
+    fs.mkdirSync('uploads');
+}
 app.use('/uploads', express.static('uploads'));
 
 //const PORT = 3000;
