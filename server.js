@@ -6,11 +6,12 @@ const menu2File = 'menu2.json';
 const app = express();
 app.use(cors());
 const path = require('path');
-app.use(express.static(path.join(__dirname, '../frontend')));
+//app.use(express.static(path.join(__dirname, '../frontend')));
+app.use(express.static(__dirname));
 app.use(express.json());
 app.use('/uploads', express.static('uploads'));
 
-const PORT = 3000;
+//const PORT = 3000;
 
 // STORAGE CONFIG
 const storage = multer.diskStorage({
@@ -311,8 +312,8 @@ io.on('connection', (socket) => {
 });
 
 // 👉 Start server
-http.listen(3000, () => {
-  console.log("... 🚀");
-});
+const PORT = process.env.PORT || 3000;
 
-app.listen(PORT, () => console.log("Server running on port " + PORT));
+http.listen(PORT, "0.0.0.0", () => {
+  console.log("🚀 Server running on port " + PORT);
+});
