@@ -472,55 +472,42 @@ body {
 </div>
 </footer>
 <script>
-// Cart logic
+// Cart
 let cart = [];
 
-// Load menu from localStorage
+// Load menu
 function loadMenu() {
-    fetch("http://localhost:3000/menu")
-    .then(res => res.json())
-    .then(menu => {
-        const grid = document.getElementById('productGrid');
-        grid.innerHTML = '';
+    fetch(`${window.location.origin}/menu`)
+        .then(res => res.json())
+        .then(menu => {
+            const grid = document.getElementById('productGrid');
+            grid.innerHTML = '';
 
-        menu.forEach(item => {
-            const card = document.createElement('div');
-            card.className = 'product-card';
+            menu.forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'product-card';
 
-            card.innerHTML = `
-                <img src="http://localhost:3000/uploads/${item.img}">
-                <div class="card-body">
-                    <h3>${item.name}</h3>
-                    <p>${item.desc}</p>
-                    <p class="price-tag">₹${parseFloat(item.price).toFixed(2)}</p>
-                    <button class="add-btn" onclick="addToCart('${item.name}', ${item.price})">Add to Cart</button>
-                </div>
-            `;
+                card.innerHTML = `
+                    <img src="${window.location.origin}/uploads/${item.img}">
+                    <div class="card-body">
+                        <h3>${item.name}</h3>
+                        <p>${item.desc}</p>
+                        <p class="price-tag">₹${parseFloat(item.price).toFixed(2)}</p>
+                        <button class="add-btn" onclick="addToCart(this, '${item.name}', ${item.price})">Add to Cart</button>
+                    </div>
+                `;
 
-            grid.appendChild(card);
-        });
-            // --- Attach IntersectionObserver AFTER cards are loaded ---
-        const cards = document.querySelectorAll(".product-card");
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if(entry.isIntersecting){
-                    entry.target.classList.add("visible");
-                }
+                grid.appendChild(card);
             });
-        }, { threshold: 0.2 });
-
-        cards.forEach(card => observer.observe(card));
-    
-    })
-    .catch(err => console.error(err));
+        })
+        .catch(err => console.error(err));
 }
 
 // Add to cart
-function addToCart(name, price) {
+function addToCart(btn, name, price) {
     cart.push({ name, price });
     document.getElementById('cart-count').innerText = cart.length;
 
-    const btn = event.target;
     btn.innerText = "✔ Added";
     btn.style.background = "#27ae60";
 
@@ -529,165 +516,68 @@ function addToCart(name, price) {
     }, 1000);
 }
 
-// Show bill modal
+// Show bill
 function showBill() {
-    if(cart.length === 0){ alert("Your cart is empty!"); return; }
+    if(cart.length === 0){ alert("Cart empty!"); return; }
+
     const itemsDiv = document.getElementById('billItems');
     const totalSpan = document.getElementById('billTotal');
-    const dateDiv = document.getElementById('billDate');
-    const billNoEl = document.getElementById('billNo');
 
     let total = 0;
-    dateDiv.innerText = new Date().toLocaleString();
     itemsDiv.innerHTML = '';
+
     cart.forEach(item => {
         total += item.price;
-        itemsDiv.innerHTML += `<div class="bill-item"><span>1x ${item.name}</span><span>₹${item.price.toFixed(2)}</span></div>`;
+        itemsDiv.innerHTML += `
+            <div class="bill-item">
+                <span>${item.name}</span>
+                <span>₹${item.price}</span>
+            </div>`;
     });
-    totalSpan.innerText = `₹${total.toFixed(2)}`;
+
+    totalSpan.innerText = `₹${total}`;
     document.getElementById('billModal').style.display = 'block';
 }
 
+// Print + save
 async function printBill() {
     const name = document.getElementById('custName').value || "Guest";
-    const phone = document.getElementById('custPhone').value || "N/A";
     const totalVal = document.getElementById('billTotal').innerText;
-
-    // Show customer in bill
-    document.getElementById('custDisplay').innerHTML = `
-        <p><strong>Customer:</strong> ${name}</p>
-        <p><strong>Phone:</strong> ${phone}</p>
-    `;
 
     const order = {
         time: new Date().toLocaleString(),
         customer: name,
-        phone: phone,
         items: cart.map(i => i.name).join(", "),
-        total: parseFloat(totalVal.replace('₹','').replace('$',''))
+        total: parseFloat(totalVal.replace('₹',''))
     };
 
     try {
-        // ✅ SEND TO BACKEND
-       const res = await fetch("http://localhost:3000/sales", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(order)
-});
-
-const data = await res.json();
-
-        console.log("Bill Response:", data);
-
-        // ✅ SET BILL NUMBER
-        const billEl = document.getElementById('billNo');
-        billEl.innerText = "Bill No: " + data.billNo;
-
-        // 🔥 FORCE DOM UPDATE (VERY IMPORTANT)
-        requestAnimationFrame(() => {
-            requestAnimationFrame(() => {
-                window.print();
-            });
+        const res = await fetch(`${window.location.origin}/sales`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(order)
         });
-        // Reset after print
-        setTimeout(() => {
-            cart = [];
-            document.getElementById('cart-count').innerText = "0";
-            document.getElementById('custName').value = "";
-            document.getElementById('custPhone').value = "";
-          
-        }, 800);
+
+        const data = await res.json();
+        document.getElementById('billNo').innerText = "Bill No: " + data.billNo;
+
+        window.print();
+
+        cart = [];
+        document.getElementById('cart-count').innerText = "0";
 
     } catch (err) {
-        console.error("Error:", err);
-        alert("Backend not running ❌");
+        alert("Server error ❌");
     }
 }
-// Print and save
-/*function printBill() {
-  
-    const name = document.getElementById('custName').value || "Guest";
-    const phone = document.getElementById('custPhone').value || "N/A";
-    document.getElementById('custDisplay').innerHTML = `<p><strong>Customer:</strong> ${name}</p><p><strong>Phone:</strong> ${phone}</p>`;
-    const totalVal = document.getElementById('billTotal').innerText;
-    const sales = JSON.parse(localStorage.getItem('pizza_sales') || "[]");
-    sales.push({
-        time: new Date().toLocaleString(),
-        customer: name,
-        items: cart.map(i=>i.name).join(", "),
-        total: parseFloat(totalVal.replace('₹',''))
-    });
-    localStorage.setItem('pizza_sales', JSON.stringify(sales));
-    window.print();
-    setTimeout(() => { cart=[]; document.getElementById('cart-count').innerText="0"; document.getElementById('custName').value=""; document.getElementById('custPhone').value=""; closeModal(); }, 500);
+
+// Close modal
+function closeModal(){
+    document.getElementById('billModal').style.display='none';
 }
-*/
 
-function closeModal(){ document.getElementById('billModal').style.display='none'; }
-
-// Load menu when page loads
+// Load menu
 window.onload = loadMenu;
-
-
-
-function addSelectedToCart() {
-    const checked = document.querySelectorAll("input:checked");
-
-    if (checked.length === 0) {
-        alert("Select items first!");
-        return;
-    }
-
-    let cart = JSON.parse(localStorage.getItem("cart")) || [];
-
-    checked.forEach(i => {
-        cart.push({
-            name: i.getAttribute("data-name"),
-            price: parseFloat(i.value)
-        });
-    });
-
-    localStorage.setItem("cart", JSON.stringify(cart));
-
-    document.getElementById('cart-count').innerText = cart.length;
-
-    checked.forEach(i => i.checked = false);
-
-    alert("Added to cart 🛒");
-}
-
-window.addEventListener('scroll', () => {
-    const hero = document.querySelector('.hero');
-    const scrollY = window.scrollY;
-
-    if(scrollY > 50) {            // start animation after 50px scroll
-        hero.classList.add('scrolled');
-    } else {
-        hero.classList.remove('scrolled');
-    }
-});
-document.addEventListener("DOMContentLoaded", () => {
-  const cards = document.querySelectorAll(".product-card");
-
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if(entry.isIntersecting){
-        entry.target.classList.add("visible");
-      }
-    });
-  }, { threshold: 0.2 }); // 20% visible triggers animation
-
-  cards.forEach(card => observer.observe(card));
-});
-
-window.addEventListener("scroll", () => {
-  const scrollTop = document.documentElement.scrollTop;
-  const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-
-  const scrolled = (scrollTop / scrollHeight) * 100;
-
-  document.getElementById("progressBar").style.width = scrolled + "%";
-});
 </script>
 
 
