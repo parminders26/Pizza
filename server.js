@@ -11,9 +11,6 @@ app.use(express.static(__dirname));
 app.use(express.json());
 
 
-
-const path = require('path');
-
 const uploadPath = path.join(__dirname, 'uploads');
 
 // ✅ Create folder safely
