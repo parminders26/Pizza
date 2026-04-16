@@ -425,7 +425,7 @@ Thank you for your order! 🙏
 
   // Load Menu2 items dynamically
   function loadMenu2() {
-    fetch("http://localhost:3000/menu2")
+    fetch(`${window.location.origin}/menu2`)
       .then(res => res.json())
       .then(data => {
         const sections = {
@@ -550,7 +550,7 @@ async function printBill() {
 
     try {
         // ✅ SEND TO BACKEND
-       const res = await fetch("http://localhost:3000/sales", {
+       const res = awaitfetch(`${window.location.origin}/sales`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(order)
