@@ -11,18 +11,23 @@ app.use(express.static(__dirname));
 app.use(express.json());
 const fs = require('fs');
 
-// ✅ Create uploads folder if not exists
-if (!fs.existsSync('uploads')) {
-    fs.mkdirSync('uploads');
+const fs = require('fs');
+const path = require('path');
+
+const uploadPath = path.join(__dirname, 'uploads');
+
+// ✅ Create folder safely
+if (!fs.existsSync(uploadPath)) {
+    fs.mkdirSync(uploadPath, { recursive: true });
 }
-app.use('/uploads', express.static('uploads'));
+app.use('/uploads', express.static(uploadPath));
 
 //const PORT = 3000;
 
 // STORAGE CONFIG
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        cb(null, 'uploads/');
+        cb(null, uploadPath); // ✅ use full path
     },
     filename: (req, file, cb) => {
         cb(null, Date.now() + "-" + file.originalname);
